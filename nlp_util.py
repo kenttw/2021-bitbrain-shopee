@@ -20,7 +20,6 @@ def prepare_text(text):
     text = re.split('\s+', text)
     return text
 
-#TODO: 這一段要改用 fuzzy matching
 
 def get_fuzzy_pairs(sub_text,ner):
 
