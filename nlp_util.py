@@ -3,9 +3,9 @@ import nltk
 import re
 nltk.download('punkt')
 
-from transformers import BertTokenizer
-MODEL_NAME = 'indobenchmark/indobert-large-p1'
-tokenizer_bert = BertTokenizer.from_pretrained(MODEL_NAME)
+# from transformers import BertTokenizer
+# MODEL_NAME = 'indobenchmark/indobert-large-p1'
+# tokenizer_bert = BertTokenizer.from_pretrained(MODEL_NAME)
 
 # isnar, s.h. & rekan ===> isn s.h. & rekan, somba opu 76
 poi_label = 'isnar, s.h. & rekan'
@@ -21,6 +21,51 @@ def prepare_text(text):
     return text
 
 #TODO: 這一段要改用 fuzzy matching
+
+def getPair(ner,sub_text):
+    ner_split = prepare_text(ner)
+    sub_text_split = prepare_text(sub_text)
+    r = []
+    for nt in ner_split:
+        # print(nt,end=' ')
+        max_score = -1
+        match_st = ''
+        for st in sub_text_split:
+
+            score = fuzz.ratio(nt,st)
+            if nt.startswith(st):
+                score += 20
+            # print(st,'===>',score)
+            if score > max_score:
+                match_st = st
+                max_score = score
+
+
+        r.append((nt,match_st,max_score))
+
+    s_index = -1 #= ner_split.index(r)
+    final_result = []
+    for i in range(len(r)):
+        label,text, score = r[i]
+
+        if score > 60:
+            s_index = i
+            final_result.append(s_index)
+            break
+
+    for i in range(len(r)):
+        label, text, score = r[i]
+
+        if score < 60 :
+            final_result.append((label,None))
+        else:
+            final_result.append((label,text))
+
+
+
+
+    return final_result
+
 
 def _get_range_kent(ner,text):
     # basic tokenizer
@@ -125,20 +170,30 @@ def genCC(ss,raw):
 
 
 
-
-# cahaya lestari toko ===> kra raya, no b 88 cahaya lest toko, rw 5 kramat
-raw = 'kra raya, no b 88 cahaya lest toko, rw 5 kramat'
-label = 'cahaya lestari toko'
-print(_get_range(ner=label, text=raw))
-print(_get_range_kent(ner=label, text=raw))
-
-
-label,raw = "plot ab tour & travel", "plot ab tour & tra brawi, kasihan"
-print(_get_range(ner=label, text=raw))
-print(_get_range_kent(ner=label, text=raw))
-
-
-
 label,raw = "hanief sembilan mtr -h", "kuripan hanief semb mtr -h, gajah mada, 58112"
-print(_get_range(ner=label, text=raw))
-print(_get_range_kent(ner=label, text=raw))
+print(getPair(label,raw))
+
+
+raw = " ".join(['a', 'b', 'c', 'd'])
+label = " ".join(['ba', '-', 'cc'])
+print(getPair(label,raw))
+
+
+
+
+# # cahaya lestari toko ===> kra raya, no b 88 cahaya lest toko, rw 5 kramat
+# raw = 'kra raya, no b 88 cahaya lest toko, rw 5 kramat'
+# label = 'cahaya lestari toko'
+# print(_get_range(ner=label, text=raw))
+# print(_get_range_kent(ner=label, text=raw))
+#
+#
+# label,raw = "plot ab tour & travel", "plot ab tour & tra brawi, kasihan"
+# print(_get_range(ner=label, text=raw))
+# print(_get_range_kent(ner=label, text=raw))
+#
+#
+#
+# label,raw = "hanief sembilan mtr -h", "kuripan hanief semb mtr -h, gajah mada, 58112"
+# print(_get_range(ner=label, text=raw))
+# print(_get_range_kent(ner=label, text=raw))
