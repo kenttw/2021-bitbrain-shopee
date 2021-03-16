@@ -22,9 +22,15 @@ def prepare_text(text):
 
 #TODO: 這一段要改用 fuzzy matching
 
-def getPair(ner,sub_text):
-    ner_split = prepare_text(ner)
-    sub_text_split = prepare_text(sub_text)
+def get_fuzzy_pairs(sub_text,ner):
+
+    if type(sub_text) == list:
+        sub_text_split = sub_text
+        ner_split = ner
+    else:
+
+        ner_split = prepare_text(ner)
+        sub_text_split = prepare_text(sub_text)
     r = []
     for nt in ner_split:
         # print(nt,end=' ')
@@ -44,24 +50,27 @@ def getPair(ner,sub_text):
         r.append((nt,match_st,max_score))
 
     s_index = -1 #= ner_split.index(r)
+
     final_result = []
     for i in range(len(r)):
         label,text, score = r[i]
 
         if score > 60:
-            s_index = i
+            s_index = sub_text_split.index(text)
             final_result.append(s_index)
             break
 
-    for i in range(len(r)):
-        label, text, score = r[i]
+    sr = []
+
+    for label, text, score in r:
+
 
         if score < 60 :
-            final_result.append((label,None))
+            sr.append((label,None))
         else:
-            final_result.append((label,text))
+            sr.append((label,text))
 
-
+    final_result.append(sr)
 
 
     return final_result
@@ -141,12 +150,12 @@ def get_bio_tagging(text, street, poi):
     return bio
 
 
-def genCC(ss,raw):
+def genCC(raw):
     # ss = word_tokenize(raw_address,)
     # ss = wordpunct_tokenize(raw_address)
     # ss = tokenizer_bert.tokenize(raw_address)
     # ss = raw_address.split(" ")
-
+    ss = prepare_text(raw)
     # becasue ss have been tokenized
     cc = []
     # print(ss)
@@ -170,13 +179,13 @@ def genCC(ss,raw):
 
 
 
-label,raw = "hanief sembilan mtr -h", "kuripan hanief semb mtr -h, gajah mada, 58112"
-print(getPair(label,raw))
-
-
-raw = " ".join(['a', 'b', 'c', 'd'])
-label = " ".join(['ba', '-', 'cc'])
-print(getPair(label,raw))
+# label,raw = "hanief sembilan mtr -h", "kuripan hanief semb mtr -h, gajah mada, 58112"
+# print(get_fuzzy_pairs(label,raw))
+#
+#
+# raw = " ".join(['a', 'b', 'c', 'd'])
+# label = " ".join(['ba', '-', 'cc'])
+# print(get_fuzzy_pairs(label,raw))
 
 
 
