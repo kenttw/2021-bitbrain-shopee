@@ -24,12 +24,12 @@ def prepare_text(text):
 
 def _get_range_kent(ner,text):
     # basic tokenizer
-    ner = prepare_text(ner)
-    text = prepare_text(text)
+    # ner = prepare_text(ner)
+    label = ner
+    text_split = prepare_text(text)
 
 
-    cc = genCC(raw_address=raw)
-    # print(cc)
+    cc = genCC(text_split,text)
     max_score = -1
     target_str = ''
     for ci in cc:
@@ -39,7 +39,7 @@ def _get_range_kent(ner,text):
             max_score = new_score
             target_str = ci
     # try:
-    # print(target_str)
+    print(target_str)
     start = raw.index(target_str)
     end = start + len(target_str)
     return (start,end)
@@ -96,7 +96,7 @@ def get_bio_tagging(text, street, poi):
     return bio
 
 
-def genCC(ss):
+def genCC(ss,raw):
     # ss = word_tokenize(raw_address,)
     # ss = wordpunct_tokenize(raw_address)
     # ss = tokenizer_bert.tokenize(raw_address)
@@ -112,45 +112,33 @@ def genCC(ss):
             temp_str = ss[i]
 
             for h in range(i+1,j):
-                # if ss[h] in """-.,&[]()\"'""" or ss[h-1] in """-""":
-                #     temp_str += ss[h]
-                # else:
-                temp_str = temp_str + " " + ss[h]
+                if ss[h] in """-.,&[]()\"'""":
+                    if (temp_str + ss[h]) in raw : temp_str+= ss[h]
+                    elif (temp_str + " " + ss[h]) in raw : temp_str+= " "+ss[h]
+                else:
+                    if temp_str + " " + ss[h] in raw : temp_str = temp_str + " " + ss[h]
+                    else: temp_str = temp_str + ss[h]
             cc.append(temp_str)
 
             # cc.append( " ".join(ss[i:j]))
     return cc
 
-def getStartEnd(label,raw):
-    cc = genCC(raw_address=raw)
-    # print(cc)
-    max_score = -1
-    target_str = ''
-    for ci in cc:
-        new_score = fuzz.ratio(label, ci)
 
-        if new_score > max_score :
-            max_score = new_score
-            target_str = ci
-    # try:
-    # print(target_str)
-    start = raw.index(target_str)
-    end = start + len(target_str)
-    return (start,end)
-    # except:
-        # print("error at ", raw)
-        # return None
 
 
 # cahaya lestari toko ===> kra raya, no b 88 cahaya lest toko, rw 5 kramat
 raw = 'kra raya, no b 88 cahaya lest toko, rw 5 kramat'
 label = 'cahaya lestari toko'
-
-
-# print(genCC('be-ng las deny, mendalanwangi'))
-#
-# print(prepare_text('be-ng las deny, mendalanwangi'))
-# print(tokenizer_bert.tokenize('be-ng las deny, mendalanwangi'))
-
-
 print(_get_range(ner=label, text=raw))
+print(_get_range_kent(ner=label, text=raw))
+
+
+label,raw = "plot ab tour & travel", "plot ab tour & tra brawi, kasihan"
+print(_get_range(ner=label, text=raw))
+print(_get_range_kent(ner=label, text=raw))
+
+
+
+label,raw = "hanief sembilan mtr -h", "kuripan hanief semb mtr -h, gajah mada, 58112"
+print(_get_range(ner=label, text=raw))
+print(_get_range_kent(ner=label, text=raw))
