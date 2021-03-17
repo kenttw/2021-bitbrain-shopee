@@ -114,8 +114,8 @@ def get_bio_tagging_string(text, street, poi):
     LABELS = ['O', 'B-STREET', 'I-STREET', 'B-POI', 'I-POI']
 
     :param text: 完整的 sting 且先不要經過 tokenizer
-    :param street:
-    :param poi:
+    :param street: training data 中的 street label
+    :param poi: training data 中 poi label
     :return: BIO Tagging Sting
     """
     p_start, p_end, s_start, s_end = get_bio_tagging_range(text, street, poi)
@@ -140,10 +140,11 @@ def get_bio_tagging_string(text, street, poi):
 
         start_2,end_2 = find_sub_list(s_splits,text_splits)
 
-        set1 = set(range(start, end))
 
-        set2 = set(range(start_2, end_2))
-        assert len(set1.intersection(set2))==0
+        if p_start != None:
+            set1 = set(range(start, end))
+            set2 = set(range(start_2, end_2))
+            assert len(set1.intersection(set2))==0
 
         BIO[start] = "B-STREET"
 
