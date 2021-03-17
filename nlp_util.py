@@ -146,7 +146,7 @@ def get_bio_tagging_string(text, street, poi):
             set2 = set(range(start_2, end_2))
             assert len(set1.intersection(set2))==0
 
-        BIO[start] = "B-STREET"
+        BIO[start_2] = "B-STREET"
 
         for i in range(start_2 + 1, end_2):
             BIO[i] = "I-STREET"
