@@ -128,7 +128,7 @@ def get_bio_tagging_string(text, street, poi):
     text_splits = prepare_text(text)
 
     BIO = ["O"] * len(text_splits)
-
+    exclude = None
     if p_start != None:
 
         p_splits = prepare_text(text[p_start:p_end])
@@ -140,10 +140,12 @@ def get_bio_tagging_string(text, street, poi):
         for i in range(start+1,end):
             BIO[i] = "I-POI"
 
+        exclude = (start, end)
+
     if s_start != None:
         s_splits = prepare_text(text[s_start:s_end])
 
-        start_2,end_2 = find_sub_list(s_splits,text_splits,exclude=(start,end))
+        start_2,end_2 = find_sub_list(s_splits,text_splits,exclude=exclude)
 
 
         if p_start != None:
