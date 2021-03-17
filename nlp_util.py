@@ -80,10 +80,10 @@ def get_range_kent(ner,text):
     # basic tokenizer
     # ner = prepare_text(ner)
     label = ner
-    text_split = prepare_text(text)
+    # text_split = prepare_text(text)
 
 
-    cc = genCC(text_split,text)
+    cc = genCC(text)
     max_score = -1
     target_str = ''
     for ci in cc:
@@ -93,8 +93,8 @@ def get_range_kent(ner,text):
             max_score = new_score
             target_str = ci
     # try:
-    print(target_str)
-    start = raw.index(target_str)
+    # print(target_str)
+    start = text.index(target_str)
     end = start + len(target_str)
     return (start,end)
 
@@ -141,7 +141,7 @@ def get_bio_tagging(text, street, poi):
         if ner is not None:
             len_ner = len(ner)
             for i in range(len_text - len_ner + 1):
-                start, end = _get_range(ner, text)
+                start, end = get_range_kent(ner,text) #_get_range(ner, text)
 
                 bio[start] = f'B-{name}'
                 for j in range(start + 1, end):
