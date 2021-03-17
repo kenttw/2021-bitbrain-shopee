@@ -70,6 +70,27 @@ def test_get_bio_tagging_range():
     print("POI==>", raw[p_start:p_end])
     print("Street==>", raw[s_start:s_end])
 
+
+    print("")
+    # case 6:
+    poi,street,raw = "toko bb kids", "raya samb gede", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy",
+    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,street,None)
+    print("case6")
+    assert  p_start == None
+
+    print("Street==>", raw[s_start:s_end])
+    assert raw[s_start:s_end] =='raya. sa-mb gede'
+
+    print("")
+    # case 7:
+    poi,street,raw = "toko bb kids", "raya samb gede", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy",
+    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,None,poi)
+    print("case6")
+    print("POI==>", raw[p_start:p_end])
+    assert raw[p_start:p_end] == 'toko bb k&ids'
+
+    assert s_start==None
+
 def test_get_bio_tagging_string():
     print("")
     # case 1:
@@ -85,6 +106,15 @@ def test_get_bio_tagging_string():
 
     poi,street,raw = "lapangan futsal sukaluyu", "tang", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy"
     BIO = nlp_util.get_bio_tagging_string(raw, street, poi)
+    print(BIO)
+
+
+    poi,street,raw = "lapangan futsal sukaluyu", "tang", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy"
+    BIO = nlp_util.get_bio_tagging_string(raw, None, poi)
+    print(BIO)
+
+    poi,street,raw = "lapangan futsal sukaluyu", "tang", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy"
+    BIO = nlp_util.get_bio_tagging_string(raw, None, None)
     print(BIO)
 
 def test_find_sub_list():
