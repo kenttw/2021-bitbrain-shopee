@@ -1,7 +1,8 @@
-from nltk.tokenize import wordpunct_tokenize, word_tokenize
-import nltk
+# from nltk.tokenize import wordpunct_tokenize, word_tokenize
+# import nltk
+# nltk.download('punkt')
+
 import re
-nltk.download('punkt')
 
 # from transformers import BertTokenizer
 # MODEL_NAME = 'indobenchmark/indobert-large-p1'
@@ -54,7 +55,7 @@ def get_fuzzy_pairs(sub_text,ner):
     for i in range(len(r)):
         label,text, score = r[i]
 
-        if score > 60:
+        if score >= 60:
             s_index = sub_text_split.index(text)
             final_result.append(s_index)
             break
@@ -75,7 +76,7 @@ def get_fuzzy_pairs(sub_text,ner):
     return final_result
 
 
-def _get_range_kent(ner,text):
+def get_range_kent(ner,text):
     # basic tokenizer
     # ner = prepare_text(ner)
     label = ner
