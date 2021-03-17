@@ -73,6 +73,13 @@ def get_fuzzy_pairs(sub_text, ner):
 
 
 def get_range_kent(ner, text):
+    """
+
+
+    :param ner: label string 完整的 sting 且先不要經過 tokenizer
+    :param text: raw string 完整的 sting 且先不要經過 tokenizer
+    :return: 回傳 (start, end) 以 character 單位
+    """
     # basic tokenizer
     # ner = prepare_text(ner)
     label = ner
@@ -94,30 +101,6 @@ def get_range_kent(ner, text):
     return (start, end)
 
 
-def _get_range(ner, text):
-    history = []
-    for idx in range(len(text) - len(ner) + 1):
-        score = 0
-
-        pointer = idx
-        for l in ner:
-            if l.startswith(text[pointer]):
-                pointer += 1
-                score += 1
-
-        start = idx
-        end = pointer
-        if score == len(ner):
-            return (start, end)
-
-        history.append((score, start, end))
-
-    if not history:
-        start = 0
-        end = len(text)
-        return (start, end)
-    _, start, end = sorted(history)[-1]
-    return (start, end)
 
 def find_sub_list(sl,l):
     sll=len(sl)
@@ -126,12 +109,11 @@ def find_sub_list(sl,l):
             return ind,ind+sll-1
 
 
-# TODO: here !!
 def get_bio_tagging_string(text, street, poi):
     """
     LABELS = ['O', 'B-STREET', 'I-STREET', 'B-POI', 'I-POI']
 
-    :param text:
+    :param text: 完整的 sting 且先不要經過 tokenizer
     :param street:
     :param poi:
     :return: BIO Tagging Sting
@@ -180,7 +162,7 @@ def get_bio_tagging_range(text, street, poi):
     :param text:
     :param street:
     :param poi:
-    :return:  (poi start, poi end, street start, street end)
+    :return:  (poi start, poi end, street start, street end)，以 character 為單位
     """
     if street != None and poi != None:
         # POI first
@@ -209,27 +191,6 @@ def get_bio_tagging_range(text, street, poi):
         return (None, None, s_start, s_end)
 
 
-def get_bio_tagging(text, street, poi):
-    len_text = len(text)
-    bio = ['O'] * len_text
-
-    pairs = []
-    if street is not None:
-        pairs.append((street, 'STREET'))
-    if poi is not None:
-        pairs.append((poi, 'POI'))
-
-    for ner, name in pairs:
-        if ner is not None:
-            len_ner = len(ner)
-            for i in range(len_text - len_ner + 1):
-                start, end = get_range_kent(ner, text)  # _get_range(ner, text)
-
-                bio[start] = f'B-{name}'
-                for j in range(start + 1, end):
-                    bio[j] = f'I-{name}'
-
-    return bio
 
 
 def genCC(raw):

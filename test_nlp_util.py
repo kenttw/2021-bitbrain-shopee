@@ -6,15 +6,6 @@ def testGC():
     print(result)
     assert result
 
-# def test_get_range_kent():
-
-
-def test_get_bio_tagging():
-    poi_label = 'isnar, s.h. & rekan'
-    raw_address = 'isn s.h. & rekan, somba opu 76'
-    result = nlp_util.get_bio_tagging(raw_address,None,poi_label )
-    print(result)
-    assert result
 
 def test_getPair():
     # label, raw = "hanief sembilan mtr -h", "kuripan hanief semb mtr -h, gajah mada, 58112"
