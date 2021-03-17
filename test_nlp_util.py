@@ -6,6 +6,7 @@ def testGC():
     print(result)
     assert result
 
+def test_get_range_kent():
 
 
 def test_get_bio_tagging():
