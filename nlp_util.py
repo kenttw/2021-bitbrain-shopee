@@ -144,6 +144,9 @@ def get_bio_tagging_string(text, street, poi):
         if p_start != None:
             set1 = set(range(start, end))
             set2 = set(range(start_2, end_2))
+
+            if len(set1.intersection(set2))!=0 :
+                print("Error At",street,poi,text)
             assert len(set1.intersection(set2))==0
 
         BIO[start_2] = "B-STREET"
