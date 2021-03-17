@@ -102,8 +102,13 @@ def get_range_kent(ner, text):
 
 
 
-def find_sub_list(sl,l):
+def find_sub_list(sl,l,exclude=None):
     sll=len(sl)
+
+    if exclude != None:
+        for i in range(exclude[0],exclude[1]):
+            l[i] = 'XXXXXXXXXXX'
+
     for ind in (i for i,e in enumerate(l) if e==sl[0]):
         if l[ind:ind+sll]==sl:
             return ind,ind+sll-1
@@ -138,7 +143,7 @@ def get_bio_tagging_string(text, street, poi):
     if s_start != None:
         s_splits = prepare_text(text[s_start:s_end])
 
-        start_2,end_2 = find_sub_list(s_splits,text_splits)
+        start_2,end_2 = find_sub_list(s_splits,text_splits,)
 
 
         if p_start != None:

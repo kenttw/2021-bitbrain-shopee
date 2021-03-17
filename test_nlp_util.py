@@ -57,9 +57,36 @@ def test_get_bio_tagging_range():
     print("POI==>", raw[p_start:p_end])
     print("Street==>", raw[s_start:s_end])
 
+
+    poi,street,raw = "tahu jontor bung tomo ", "bung tomo",  "tahu jon bung tomo bung tomo, sungai keledang samarinda seberang"
+    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,street,poi)
+    print("case4")
+    print("POI==>", raw[p_start:p_end])
+    print("Street==>", raw[s_start:s_end])
+
 def test_get_bio_tagging_string():
     print("")
     # case 1:
     poi, street, raw = "toko bb kids", "raya samb gede", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy",
     BIO = nlp_util.get_bio_tagging_string(raw, street, poi)
     print(BIO)
+
+
+def test_find_sub_list():
+    print("")
+    poi,street,raw = "tahu jontor bung tomo ", "bung tomo",  "tahu jon bung tomo bung tomo, sungai keledang samarinda seberang"
+    p_start, p_end, s_start, s_end = nlp_util.get_bio_tagging_range(raw, street, poi)
+
+    text_splits = nlp_util.prepare_text(raw) #['tahu', 'jon', 'bung', 'tomo', 'bung', 'tomo', ',', 'sungai', 'keledang', 'samarinda', 'seberang']
+    p_splits = nlp_util.prepare_text(raw[p_start:p_end])
+    start, end = nlp_util.find_sub_list(p_splits, text_splits)
+
+    s_splits = nlp_util.prepare_text(raw[s_start:s_end])
+
+    start_2, end_2 = nlp_util.find_sub_list(s_splits, text_splits, (start,end))
+
+    set1 = set(range(start, end))
+    set2 = set(range(start_2, end_2))
+    print(start,end,start_2,end_2)
+
+    assert len(set1.intersection(set2))==0
