@@ -123,6 +123,7 @@ def get_bio_tagging_string(text, street, poi):
     :param poi: training data 中 poi label
     :return: BIO Tagging Sting
     """
+
     p_start, p_end, s_start, s_end = get_bio_tagging_range(text, street, poi)
 
     text_splits = prepare_text(text)
