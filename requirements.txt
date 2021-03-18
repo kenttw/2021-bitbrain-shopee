@@ -1,3 +1,4 @@
 fuzzywuzzy
 pytest
-# transformers
+transformers
+seqeval

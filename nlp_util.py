@@ -123,6 +123,9 @@ def get_bio_tagging_string(text, street, poi):
     :param poi: training data 中 poi label
     :return: BIO Tagging Sting
     """
+
+    if street == None: street =""
+    if poi == None: poi = ""
     text_splits = prepare_text(text)
 
     BIO = ["O"] * len(text_splits)
@@ -182,6 +185,10 @@ def get_bio_tagging_range(text, street, poi):
     :param poi:
     :return:  (poi start, poi end, street start, street end)，以 character 為單位
     """
+
+    if street == None: street =""
+    if poi == None: poi = ""
+
     if street!='' and poi!='':
         # POI first
         p_start, p_end = get_range_kent(poi, text)
