@@ -15,17 +15,33 @@ raw_address = 'isn s.h. & rekan, somba opu 76'
 from fuzzywuzzy import fuzz
 
 import pickle
-poi_s2l = None
+_poi_s2l = None
 with open("./poi_s2l.pkl","rb") as fw:
-    poi_s2l = pickle.load(fw)
+    _poi_s2l = pickle.load(fw)
 
-def poi_short2long(short_str):
-    if short_str in poi_s2l:
-        cc = poi_s2l[short_str]
+def _poi_short2long(short_str):
+    if short_str in _poi_s2l:
+        cc = _poi_s2l[short_str]
         long_str = cc.most_common(1)
-        return long_str
+        return long_str[0][0]
     else:
         return None
+
+
+def process_poi_l2s(raw_ss='swa timur xxi'):
+    ss = prepare_text(raw_ss)
+    new_ss = ""
+    for w in ss:
+        if w in _poi_s2l:
+
+            ll = _poi_short2long(w)
+            #             print(w,ll)
+            raw_ss = raw_ss.replace(w, ll)
+        else:
+            pass
+    return raw_ss
+
+
 
 def prepare_text(text):
     text = re.sub(r'([a-z0-9]+)', r' \1 ', text)
