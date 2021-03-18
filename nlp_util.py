@@ -23,7 +23,10 @@ def _poi_short2long(short_str):
     if short_str in _poi_s2l:
         cc = _poi_s2l[short_str]
         long_str = cc.most_common(1)
-        return long_str[0][0]
+        if long_str[0][1] > 50:
+            return long_str[0][0]
+        else:
+            return None
     else:
         return None
 
