@@ -39,7 +39,7 @@ def process_poi_l2s(raw_ss='swa timur xxi'):
 
             ll = _poi_short2long(w)
             #             print(w,ll)
-            if ll == None:
+            if ll != None:
                 raw_ss = raw_ss.replace(w, ll)
         else:
             pass
