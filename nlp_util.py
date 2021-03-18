@@ -127,7 +127,7 @@ def get_bio_tagging_string(text, street, poi):
 
     BIO = ["O"] * len(text_splits)
 
-    if street == None and poi == None:
+    if street=='' and poi=='':
         return BIO
 
     p_start, p_end, s_start, s_end = get_bio_tagging_range(text, street, poi)
@@ -142,12 +142,12 @@ def get_bio_tagging_string(text, street, poi):
 
         BIO[start] = "B-POI"
 
-        for i in range(start+1,end):
+        for i in range(start+1,end+1):
             BIO[i] = "I-POI"
 
         exclude = (start, end)
 
-    if s_start != None:
+    if s_start != None :
         s_splits = prepare_text(text[s_start:s_end])
 
         start_2,end_2 = find_sub_list(s_splits,text_splits,exclude=exclude)
@@ -165,7 +165,7 @@ def get_bio_tagging_string(text, street, poi):
 
         BIO[start_2] = "B-STREET"
 
-        for i in range(start_2 + 1, end_2):
+        for i in range(start_2 + 1, end_2+1):
             BIO[i] = "I-STREET"
 
 
@@ -182,7 +182,7 @@ def get_bio_tagging_range(text, street, poi):
     :param poi:
     :return:  (poi start, poi end, street start, street end)，以 character 為單位
     """
-    if street != None and poi != None:
+    if street!='' and poi!='':
         # POI first
         p_start, p_end = get_range_kent(poi, text)
 
@@ -201,10 +201,10 @@ def get_bio_tagging_range(text, street, poi):
             s_end += p_end
 
         return (p_start, p_end, s_start, s_end)
-    elif street == None:
+    elif street=='':
         p_start, p_end = get_range_kent(poi, text)
         return (p_start, p_end, None, None)
-    elif poi == None:
+    elif poi == '' :
         s_start, s_end = get_range_kent(street, text)
         return (None, None, s_start, s_end)
 

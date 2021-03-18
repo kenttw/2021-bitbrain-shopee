@@ -64,7 +64,7 @@ def test_get_bio_tagging_range():
     print("POI==>", raw[p_start:p_end])
     print("Street==>", raw[s_start:s_end])
 
-    poi,street,raw = None,"citra yuda iv  peru depok", "raya. sa-mb gede, 299 toko bb k&ids yyy"
+    poi,street,raw = '',"citra yuda iv  peru depok", "raya. sa-mb gede, 299 toko bb k&ids yyy"
     p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,street,poi)
     print("case5")
     print("POI==>", raw[p_start:p_end])
@@ -74,7 +74,7 @@ def test_get_bio_tagging_range():
     print("")
     # case 6:
     poi,street,raw = "toko bb kids", "raya samb gede", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy",
-    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,street,None)
+    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,street,'')
     print("case6")
     assert  p_start == None
 
@@ -84,12 +84,20 @@ def test_get_bio_tagging_range():
     print("")
     # case 7:
     poi,street,raw = "toko bb kids", "raya samb gede", "xxx raya. sa-mb gede, 299 toko bb k&ids yyy",
-    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,None,poi)
-    print("case6")
+    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,'',poi)
+    print("case7")
     print("POI==>", raw[p_start:p_end])
     assert raw[p_start:p_end] == 'toko bb k&ids'
 
     assert s_start==None
+
+
+    poi, street, raw = 'sd neg 12 anggrek', '', 'sd negeri 12 anggrek'
+    p_start,p_end,s_start,s_end = nlp_util.get_bio_tagging_range(raw,street,poi)
+    print("case8")
+    print("POI==>", raw[p_start:p_end])
+    # print("Street==>", raw[s_start:s_end])
+    assert s_start == None
 
 def test_get_bio_tagging_string():
     print("")
